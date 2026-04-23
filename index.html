@@ -1,1 +1,783 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Josh.Notes — Dev Blog by Josh Manalo</title>
+  <meta name="description" content="Code, SEO, and real-world builds by Josh Michael Manalo — Full-Stack Developer & SEO Specialist." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080808;
+      --bg2: #101010;
+      --bg3: #161616;
+      --border: rgba(255,255,255,0.06);
+      --border2: rgba(255,255,255,0.1);
+      --text: #f0ece4;
+      --muted: #666;
+      --muted2: #444;
+      --accent: #b8ff57;
+      --accent2: #8fd43b;
+      --accent-dim: rgba(184,255,87,0.08);
+      --accent-dim2: rgba(184,255,87,0.15);
+      --font-display: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    ::selection { background: var(--accent); color: #080808; }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 56px;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 5px 12px;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .nav-back {
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid rgba(184,255,87,0.2);
+      padding: 5px 12px;
+      border-radius: 4px;
+      transition: background 0.2s, border-color 0.2s;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-back:hover { background: var(--accent-dim2); border-color: rgba(184,255,87,0.4); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      padding: 5rem 2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .hero-bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(184,255,87,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184,255,87,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .hero-bg-glow {
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(184,255,87,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; max-width: 860px; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero-desc {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 460px;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hero-stat strong {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .hero-stat span {
+      font-size: 11px;
+      color: var(--muted2);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .filter-label {
+      font-size: 11px;
+      color: var(--muted2);
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      margin-right: 4px;
+    }
+
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 14px;
+      border-radius: 2px;
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+    }
+
+    .chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+    .chip.active {
+      background: var(--accent);
+      color: #080808;
+      border-color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 0;
+      max-width: 100%;
+    }
+
+    .posts-col {
+      border-right: 1px solid var(--border);
+      padding: 2rem;
+    }
+
+    .sidebar {
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── FEATURED ── */
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted2);
+      margin-bottom: 1.25rem;
+    }
+
+    .featured-card {
+      position: relative;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      padding: 1.75rem;
+      margin-bottom: 2.5rem;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .featured-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .featured-card:hover { border-color: rgba(184,255,87,0.2); }
+
+    .post-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 3px 10px;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .featured-card h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .featured-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .post-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .post-date {
+      font-size: 11px;
+      color: var(--muted2);
+    }
+
+    .read-link {
+      font-size: 12px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s;
+    }
+
+    .read-link:hover { gap: 8px; }
+
+    /* ── POST LIST ── */
+    .posts-list { display: flex; flex-direction: column; gap: 0; }
+
+    .post-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .post-item:last-child { border-bottom: none; }
+
+    .post-item:hover .post-item-title { color: var(--accent); }
+
+    .post-item-tag {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--muted2);
+      margin-bottom: 4px;
+    }
+
+    .post-item-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+      transition: color 0.15s;
+    }
+
+    .post-item-excerpt {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .post-item-right {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .post-item-date { font-size: 11px; color: var(--muted2); display: block; margin-bottom: 2px; }
+    .post-item-min { font-size: 11px; color: var(--muted2); }
+
+    /* ── SIDEBAR ── */
+    .sidebar-block {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-block:last-child { border-bottom: none; }
+
+    .sidebar-block .section-label { margin-bottom: 1rem; }
+
+    .about-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem;
+    }
+
+    .about-avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      color: #080808;
+      margin-bottom: 0.75rem;
+    }
+
+    .about-name {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .about-role { font-size: 11px; color: var(--muted); margin-bottom: 0.75rem; }
+
+    .about-bio { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+
+    .about-link {
+      display: inline-block;
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid rgba(184,255,87,0.2);
+      padding: 4px 12px;
+      border-radius: 3px;
+      transition: background 0.15s;
+    }
+
+    .about-link:hover { background: var(--accent-dim); }
+
+    .topics-list { display: flex; flex-direction: column; gap: 4px; }
+
+    .topic-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 4px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .topic-item:hover { border-color: rgba(184,255,87,0.2); background: var(--accent-dim); }
+
+    .topic-name { color: var(--text); }
+    .topic-count { font-size: 10px; color: var(--accent); }
+
+    .newsletter-card {
+      background: var(--accent-dim);
+      border: 1px solid rgba(184,255,87,0.15);
+      border-radius: 6px;
+      padding: 1.25rem;
+    }
+
+    .newsletter-card h4 {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .newsletter-card p { font-size: 12px; color: var(--muted); margin-bottom: 1rem; line-height: 1.6; }
+
+    .newsletter-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 8px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .newsletter-input:focus { border-color: rgba(184,255,87,0.4); }
+    .newsletter-input::placeholder { color: var(--muted2); }
+
+    .newsletter-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #080808;
+      border: none;
+      border-radius: 4px;
+      padding: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.15s;
+    }
+
+    .newsletter-btn:hover { opacity: 0.85; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p { font-size: 12px; color: var(--muted2); }
+
+    .footer-links { display: flex; gap: 1.5rem; }
+
+    .footer-links a {
+      font-size: 12px;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner { animation: fadeUp 0.6s ease both; }
+    .featured-card { animation: fadeUp 0.6s 0.1s ease both; }
+    .post-item { animation: fadeUp 0.5s ease both; }
+    .post-item:nth-child(1) { animation-delay: 0.15s; }
+    .post-item:nth-child(2) { animation-delay: 0.2s; }
+    .post-item:nth-child(3) { animation-delay: 0.25s; }
+    .post-item:nth-child(4) { animation-delay: 0.3s; }
+    .post-item:nth-child(5) { animation-delay: 0.35s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .hero { padding: 3rem 1rem 2.5rem; }
+      .filter-bar { padding: 1rem; }
+      .main { grid-template-columns: 1fr; }
+      .posts-col { border-right: none; padding: 1.5rem 1rem; }
+      .sidebar { padding: 1.5rem 1rem; border-top: 1px solid var(--border); }
+      footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Josh<span>.Notes</span></div>
+    <ul class="nav-links">
+      <li><a href="#posts">All Posts</a></li>
+      <li><a href="#posts">JavaScript</a></li>
+      <li><a href="#posts">SEO</a></li>
+      <li><a href="#posts">Freelance</a></li>
+    </ul>
+    <a href="https://jmdmanalo2222.github.io/portfolio/" class="nav-back">← Portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-bg-glow"></div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">DEVELOPER BLOG</div>
+      <h1>
+        Code, SEO &
+        <em>Real-world builds.</em>
+      </h1>
+      <p class="hero-desc">
+        Notes from a full-stack developer in the Philippines. No fluff — just things I've actually built, fixed, and learned the hard way.
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>12+</strong>
+          <span>ARTICLES</span>
+        </div>
+        <div class="hero-stat">
+          <strong>3</strong>
+          <span>TOPICS</span>
+        </div>
+        <div class="hero-stat">
+          <strong>2026</strong>
+          <span>EST.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">FILTER:</span>
+    <button class="chip active" onclick="filterPosts('all', this)">All Posts</button>
+    <button class="chip" onclick="filterPosts('javascript', this)">JavaScript</button>
+    <button class="chip" onclick="filterPosts('seo', this)">SEO</button>
+    <button class="chip" onclick="filterPosts('freelance', this)">Freelance</button>
+    <button class="chip" onclick="filterPosts('case-study', this)">Case Studies</button>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="posts-col" id="posts">
+
+      <!-- FEATURED -->
+      <div class="section-label">// FEATURED POST</div>
+      <a href="posts/why-your-website-is-slow.html" class="featured-card" style="display:block;">
+        <div class="post-tag">JAVASCRIPT</div>
+        <h2>Why your website is slow — and how I fixed it in one afternoon</h2>
+        <p>A real client project walkthrough: diagnosing performance issues, cutting load time by 60%, and what I actually learned along the way. Includes before/after metrics.</p>
+        <div class="post-meta">
+          <span class="post-date">Apr 23, 2026 · 6 min read</span>
+          <span class="read-link">Read post →</span>
+        </div>
+      </a>
+
+      <!-- RECENT POSTS -->
+      <div class="section-label">// RECENT POSTS</div>
+      <div class="posts-list" id="posts-list">
+
+        <a href="posts/seo-mistakes.html" class="post-item" data-category="seo" style="display:grid;">
+          <div>
+            <div class="post-item-tag">SEO</div>
+            <div class="post-item-title">Why your website isn't ranking on Google</div>
+            <div class="post-item-excerpt">Common SEO mistakes I see on almost every client site — and how to fix them fast.</div>
+          </div>
+          <div class="post-item-right">
+            <span class="post-item-date">Apr 20, 2026</span>
+            <span class="post-item-min">4 min</span>
+          </div>
+        </a>
+
+        <a href="posts/react-vs-vue.html" class="post-item" data-category="javascript" style="display:grid;">
+          <div>
+            <div class="post-item-tag">JAVASCRIPT</div>
+            <div class="post-item-title">React vs Vue — what I actually use for client work</div>
+            <div class="post-item-excerpt">Not a tutorial. Just my honest take after using both on real freelance projects.</div>
+          </div>
+          <div class="post-item-right">
+            <span class="post-item-date">Apr 15, 2026</span>
+            <span class="post-item-min">5 min</span>
+          </div>
+        </a>
+
+        <a href="posts/website-cost.html" class="post-item" data-category="freelance" style="display:grid;">
+          <div>
+            <div class="post-item-tag">FREELANCE</div>
+            <div class="post-item-title">How much does a website really cost in 2026?</div>
+            <div class="post-item-excerpt">Breaking down pricing so clients actually understand what they're paying for.</div>
+          </div>
+          <div class="post-item-right">
+            <span class="post-item-date">Apr 10, 2026</span>
+            <span class="post-item-min">3 min</span>
+          </div>
+        </a>
+
+        <a href="posts/bytestore-case-study.html" class="post-item" data-category="case-study" style="display:grid;">
+          <div>
+            <div class="post-item-tag">CASE STUDY</div>
+            <div class="post-item-title">How I built ByteStore — a full-stack e-commerce app</div>
+            <div class="post-item-excerpt">From idea to deployment: the decisions I made, the bugs I hit, and the lessons I kept.</div>
+          </div>
+          <div class="post-item-right">
+            <span class="post-item-date">Apr 5, 2026</span>
+            <span class="post-item-min">8 min</span>
+          </div>
+        </a>
+
+        <a href="posts/local-seo.html" class="post-item" data-category="seo" style="display:grid;">
+          <div>
+            <div class="post-item-tag">SEO</div>
+            <div class="post-item-title">Local SEO for small businesses — the basics that actually work</div>
+            <div class="post-item-excerpt">What I tell every small business owner who asks me why they can't be found online.</div>
+          </div>
+          <div class="post-item-right">
+            <span class="post-item-date">Mar 28, 2026</span>
+            <span class="post-item-min">5 min</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-block">
+        <div class="section-label">// ABOUT</div>
+        <div class="about-card">
+          <div class="about-avatar">JM</div>
+          <div class="about-name">Josh Manalo</div>
+          <div class="about-role">Full-Stack Dev & SEO Specialist</div>
+          <div class="about-bio">Based in the Philippines. Building fast, clean websites that rank well and actually work for clients.</div>
+          <a href="https://jmdmanalo2222.github.io/portfolio/" class="about-link">View Portfolio →</a>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="section-label">// TOPICS</div>
+        <div class="topics-list">
+          <div class="topic-item" onclick="filterPosts('javascript', null)">
+            <span class="topic-name">JavaScript</span>
+            <span class="topic-count">4 posts</span>
+          </div>
+          <div class="topic-item" onclick="filterPosts('seo', null)">
+            <span class="topic-name">SEO</span>
+            <span class="topic-count">3 posts</span>
+          </div>
+          <div class="topic-item" onclick="filterPosts('freelance', null)">
+            <span class="topic-name">Freelance</span>
+            <span class="topic-count">3 posts</span>
+          </div>
+          <div class="topic-item" onclick="filterPosts('case-study', null)">
+            <span class="topic-name">Case Studies</span>
+            <span class="topic-count">2 posts</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="section-label">// STAY UPDATED</div>
+        <div class="newsletter-card">
+          <h4>Get new posts</h4>
+          <p>No spam. Just dev notes and SEO tips when I publish something new.</p>
+          <input type="email" class="newsletter-input" placeholder="your@email.com" />
+          <button class="newsletter-btn">Subscribe →</button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Josh Michael Manalo · Josh.Notes</p>
+    <div class="footer-links">
+      <a href="https://github.com/jmdmanalo2222" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/josh-manalo-a2b0993b8/" target="_blank">LinkedIn</a>
+      <a href="https://jmdmanalo2222.github.io/portfolio/#contact">Contact</a>
+    </div>
+  </footer>
+
+  <script>
+    function filterPosts(category, btn) {
+      const chips = document.querySelectorAll('.chip');
+      if (btn) {
+        chips.forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      const items = document.querySelectorAll('.post-item');
+      items.forEach(item => {
+        if (category === 'all' || item.dataset.category === category) {
+          item.style.display = 'grid';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
